@@ -25,7 +25,7 @@
                 <img src="{{ boardGame.imgSrc }}" alt="" class="img-responsive">
               </div>
               <div class="col-md-2">
-                <button v-on:click="mark(boardGame)" class="btn btn-success" v-if="!boardGame.bought">Bought</button>
+                <button v-on:click="mark(boardGame, boardGame['.key'])" class="btn btn-success" v-if="!boardGame.bought">Bought</button>
                 <button v-on:click="increasePlayCount(boardGame)" v-if="boardGame.bought"
                   class="btn btn-default">Played</button>
               </div>
@@ -64,9 +64,13 @@
 </template>
 
 <script>
+  import Firebase from 'firebase';
+  const itemsRef = new Firebase('https://shining-torch-265.firebaseio.com/');
+
   export default {
     data() {
       return {
+        /*
         boardGames: [
           {
             idx: 1,
@@ -89,16 +93,26 @@
             imgSrc: 'http://a2.res.cloudinary.com/csicdn/image/upload/c_pad,h_300,w_300/v1/Images/Products/Misc%20Art/White%20Wizard%20Games/full/WWG001_1.jpg',
           },
         ],
+        */
         newBoardGame: '',
       };
     },
 
+    firebase: {
+      boardGames: itemsRef.limitToLast(25),
+    },
+
     methods: {
-      mark(boardGame) {
-        const idx = this.boardGames.findIndex(element => element.idx === boardGame.idx);
-        this.boardGames.$set(idx, Object.assign({}, boardGame, {
+      mark(boardGame, key) {
+        // const idx = this.boardGames.findIndex(element => element.idx === boardGame.idx);
+        const updatedObject = Object.assign({}, boardGame, {
           bought: !boardGame.bought,
-        }));
+        });
+
+        // this.boardGames.$set(idx, updatedObject);
+        console.log(key);
+
+        itemsRef.child(key).set(updatedObject);
       },
 
       increasePlayCount(boardGame) {
@@ -120,6 +134,13 @@
             bought: false,
             playCount: 0,
           });
+
+          itemsRef.push({
+            name,
+            bought: false,
+            playCount: 0,
+          });
+
           this.newBoardGame = '';
         }
       },
