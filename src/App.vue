@@ -44,6 +44,15 @@
                     </h4>
                   </div>
                 </div>
+
+                <div class="row" v-if="boardGame.lastPlayed">
+                  <div class="col-md-12">
+                    <h4>
+                      <i class="glyphicon glyphicon-calendar"></i>
+                      Last Played: {{ boardGame.lastPlayed }}
+                    </h4>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -94,8 +103,11 @@
 
       increasePlayCount(boardGame) {
         const idx = this.boardGames.findIndex(element => element.idx === boardGame.idx);
+        const myDate = new Date();
+        const dateFormated = `${myDate.getDate()}.${myDate.getMonth() + 1}.${myDate.getFullYear()}`;
         this.boardGames.$set(idx, Object.assign({}, boardGame, {
           playCount: boardGame.playCount + 1,
+          lastPlayed: dateFormated,
         }));
       },
 
