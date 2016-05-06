@@ -1,12 +1,14 @@
 <template>
   <div class="container">
     <h1>Board Game List</h1>
+    <Hello></Hello>
+    <my-component></my-component>
     <div class="row">
       <div class="col-md-3">
         <div class="form-group">
           <input type="text" v-model="newBoardGame" class="form-control" placeholder="Game Name">
         </div>
-        <button class="btn btn-primary" v-on:click="addBoardGame">Add BoardGame</button>
+        <button class="btn btn-primary" @click="addBoardGame">Add BoardGame</button>
       </div>
 
       <div class="col-md-9">
@@ -16,47 +18,8 @@
           <button type="button" class="btn btn-default">Unbought</button>
         </div>
 
-        <div v-for="boardGame in boardGames | orderBy 'playCount' -1" class="panel panel-default"
-          v-bind:class="{ 'panel-success': boardGame.bought }" track-by="$index">
-          <div class="panel-heading"><i v-if="boardGame.bought" class="glyphicon glyphicon-ok-sign"></i> {{ boardGame.name }}</div>
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-md-2" v-if="boardGame.imgSrc">
-                <img src="{{ boardGame.imgSrc }}" alt="" class="img-responsive">
-              </div>
-              <div class="col-md-2">
-                <button @click="mark(boardGame, boardGame['.key'])" class="btn btn-success" v-if="!boardGame.bought">Bought</button>
-                <button v-on:click="increasePlayCount(boardGame, boardGame['.key'])" v-if="boardGame.bought"
-                  class="btn btn-default">Played</button>
-              </div>
-              <div class="col-md-8" v-if="boardGame.bought">
-                <div class="row">
-                  <div class="col-md-6">
-                    <h4>
-                      <i class="glyphicon glyphicon-time"></i>
-                      Play Count: {{ boardGame.playCount }}
-                    </h4>
-                  </div>
-                  <div class="col-md-6">
-                    <h4>
-                      <i class="glyphicon glyphicon-heart"></i>
-                      Rating: {{ boardGame.playCount }}
-                    </h4>
-                  </div>
-                </div>
+        <game-panel v-for="boardGame in boardGames | orderBy 'playCount' -1" class="panel panel-default" :board-game="boardGame"></game-panel>
 
-                <div class="row" v-if="boardGame.lastPlayed">
-                  <div class="col-md-12">
-                    <h4>
-                      <i class="glyphicon glyphicon-calendar"></i>
-                      Last Played: {{ boardGame.lastPlayed }}
-                    </h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <!-- <pre>{{ boardGames | json }}</pre> -->
       </div>
     </div>
@@ -67,7 +30,13 @@
   import Firebase from 'firebase';
   const itemsRef = new Firebase('https://shining-torch-265.firebaseio.com/');
 
+  import GamePanel from './components/GamePanel.vue';
+
   export default {
+    components: {
+      'game-panel': GamePanel,
+    },
+
     data() {
       return {
         newBoardGame: '',
