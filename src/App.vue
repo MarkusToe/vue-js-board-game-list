@@ -1,8 +1,6 @@
 <template>
   <div class="container">
     <h1>Board Game List</h1>
-    <Hello></Hello>
-    <my-component></my-component>
     <div class="row">
       <div class="col-md-3">
         <div class="form-group">
@@ -18,7 +16,7 @@
           <button type="button" class="btn btn-default">Unbought</button>
         </div>
 
-        <game-panel v-for="boardGame in boardGames | orderBy 'playCount' -1" class="panel panel-default" :board-game="boardGame"></game-panel>
+        <game-panel v-for="boardGame in boardGames | orderBy 'playCount' -1" class="panel panel-default" :board-game="boardGame" :index="$index"></game-panel>
 
         <!-- <pre>{{ boardGames | json }}</pre> -->
       </div>
@@ -48,14 +46,24 @@
     },
 
     methods: {
-      mark(boardGame, key) {
-        const boardGameRef = itemsRef.child(key);
-        boardGameRef.update({
-          bought: !boardGame.bought,
-        });
-      },
+      addBoardGame() {
+        const name = this.newBoardGame.trim();
+        if (name) {
+          itemsRef.push({
+            name,
+            bought: false,
+            playCount: 0,
+            ratingMarion: 1,
+            ratingMarkus: 1,
+          });
 
-      increasePlayCount(boardGame, key) {
+          this.newBoardGame = '';
+        }
+      },
+    },
+
+    events: {
+      'increase-playcount': (boardGame, key) => {
         const myDate = new Date();
         const dateFormated = `${myDate.getDate()}.${myDate.getMonth() + 1}.${myDate.getFullYear()}`;
         const boardGameRef = itemsRef.child(key);
@@ -65,24 +73,18 @@
         });
       },
 
-      addBoardGame() {
-        const name = this.newBoardGame.trim();
-        console.log(name);
-        if (name) {
-          this.boardGames.push({
-            name,
-            bought: false,
-            playCount: 0,
-          });
+      'toggle-owned-state': (boardGame, key) => {
+        const boardGameRef = itemsRef.child(key);
+        boardGameRef.update({
+          bought: !boardGame.bought,
+        });
+      },
 
-          itemsRef.push({
-            name,
-            bought: false,
-            playCount: 0,
-          });
-
-          this.newBoardGame = '';
-        }
+      'change-rating': (ratingObject) => {
+        const boardGameRef = itemsRef.child(ratingObject.key);
+        const updateObject = {};
+        updateObject[ratingObject.ratingPerson] = ratingObject.value;
+        boardGameRef.update(updateObject);
       },
     },
   };
