@@ -16,7 +16,7 @@
           <button type="button" class="btn btn-default">Unbought</button>
         </div>
 
-        <game-panel v-for="boardGame in boardGames | orderBy 'playCount' -1" class="panel panel-default" :board-game="boardGame" :index="$index"></game-panel>
+        <game-panel v-for="boardGame in boardGames | orderBy 'playCount' -1" class="panel panel-default" :board-game="boardGame" :index="$index" track-by="$index"></game-panel>
 
         <!-- <pre>{{ boardGames | json }}</pre> -->
       </div>
