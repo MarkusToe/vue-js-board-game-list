@@ -107,10 +107,6 @@ export default {
     },
   },
 
-  ready() {
-    console.log(this.$route.path);
-  },
-
   props: ['board-game', 'index'],
 
   methods: {
