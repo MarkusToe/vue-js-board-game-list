@@ -11,12 +11,15 @@
 
       <div class="col-md-9">
         <div class="btn-group" role="group" aria-label="...">
-          <button type="button" class="btn btn-default">All</button>
-          <button type="button" class="btn btn-default">Bought</button>
-          <button type="button" class="btn btn-default">Unbought</button>
+          <button type="button" class="btn btn-default" v-link="{ path: '/all' }">All</button>
+          <button type="button" class="btn btn-default" v-link="{ path: '/bought' }">Bought</button>
+          <button type="button" class="btn btn-default" v-link="{ path: '/unbought' }">Unbought</button>
         </div>
 
-        <game-panel v-for="boardGame in boardGames | orderBy 'playCount' -1" class="panel panel-default" :board-game="boardGame" :index="$index" track-by="$index"></game-panel>
+        <router-view></router-view>
+
+        <!-- <game-panel v-for="boardGame in boardGames | filterBy 'false' in 'bought' | orderBy 'playCount' -1"
+                    class="panel panel-default" :board-game="boardGame" :index="$index" track-by="$index"></game-panel> -->
 
         <!-- <pre>{{ boardGames | json }}</pre> -->
       </div>
@@ -25,8 +28,10 @@
 </template>
 
 <script>
-  import Firebase from 'firebase';
-  const itemsRef = new Firebase('https://shining-torch-265.firebaseio.com/');
+  // import Firebase from 'firebase';
+  // const itemsRef = new Firebase('https://shining-torch-265.firebaseio.com/');
+
+  import itemsRef from './store/index.js';
 
   import GamePanel from './components/GamePanel.vue';
 
