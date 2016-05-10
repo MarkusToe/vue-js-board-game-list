@@ -13,7 +13,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-md-2" v-if="boardGame.imgSrc">
-            <img src="{{ boardGame.imgSrc }}" alt="" class="img-responsive">
+            <img v-bind:src="boardGame.imgSrc" alt="" class="img-responsive">
           </div>
 
           <div class="col-md-2">
@@ -105,6 +105,10 @@ export default {
       return (parseInt(this.boardGame.ratingMarion, 10) +
       parseInt(this.boardGame.ratingMarkus, 10)) / 2;
     },
+  },
+
+  ready() {
+    console.log(this.$route.path);
   },
 
   props: ['board-game', 'index'],
