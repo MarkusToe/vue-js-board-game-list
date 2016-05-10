@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import App from './App';
-import Hello from './components/Hello.vue';
 import All from './components/All.vue';
 import Bought from './components/Bought.vue';
 import Unbought from './components/Unbought.vue';
@@ -16,9 +15,6 @@ Vue.use(VueFire);
 const router = new VueRouter();
 
 router.map({
-  '/hello': {
-    component: Hello,
-  },
   '/all': {
     component: All,
   },
@@ -31,7 +27,7 @@ router.map({
 });
 
 router.redirect({
-  '*': '/hello',
+  '*': '/all',
 });
 
 router.start(App, '#app');
